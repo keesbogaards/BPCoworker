@@ -6,11 +6,10 @@
 package de.bridgephone.coworker.mainview;
 
 
+import de.bridgephone.coworker.MyCallable;
 import de.bridgephone.coworker.xmlconfiguration.CheckResult;
 import de.bridgephone.coworker.xmlconfiguration.XmlHarmonyConfiguration;
 import de.bridgephone.coworker.xmlconfiguration.XmlValueRecord;
-import org.apache.logging.log4j.LogManager;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -26,11 +25,12 @@ public class MainViewControl {
     private MainViewFx view;
     private XmlHarmonyConfiguration xmlHarmonyConfiguration;
     private Locale currentLocale;
-    private java.util.logging.Logger LOG= Logger.getLogger(TAG);
+    private final java.util.logging.Logger LOG= Logger.getLogger(TAG);
 
-    static void changeLocale(Locale currentLocale) {
-
-    }
+//    void changeLocale(Locale locale, int language) {
+//        currentLocale=locale;
+//        xmlHarmonyConfiguration.setLocale(currentLocale,language );
+//    }
 
 
 
@@ -39,10 +39,10 @@ public class MainViewControl {
 
     }
 
-    public Locale getLocale() {
-        currentLocale = xmlHarmonyConfiguration.getCurrentLocale();
-        return currentLocale;
-    }
+//    public Locale getLocale() {
+//        currentLocale = xmlHarmonyConfiguration.getCurrentLocale();
+//        return currentLocale;
+//    }
 
     /**
      *
@@ -51,7 +51,7 @@ public class MainViewControl {
     public void initialFillView(XmlHarmonyConfiguration xmlHarmonyConfiguration) {
         this.xmlHarmonyConfiguration = xmlHarmonyConfiguration;
         XmlValueRecord xmlRecord = xmlHarmonyConfiguration.getXmlRecord();
-        getLocale();
+        currentLocale = xmlHarmonyConfiguration.getCurrentLocale();
 
         checkUpdateTextFields(xmlHarmonyConfiguration, xmlRecord);
 
@@ -129,16 +129,29 @@ public class MainViewControl {
             xmlHarmonyConfiguration.getXmlRecord().setPcbridgephoneFilePath(path);
         }
         if (fieldNo == XmlValueRecord.PCBRIDGEPHONEPROGRAM) {
-            xmlHarmonyConfiguration.getXmlRecord().setScoringProgramFilePath(path);
+            xmlHarmonyConfiguration.setScoringProgramPathFile(new File(path));
+//            xmlHarmonyConfiguration.getXmlRecord().setScoringProgramFilePath(path);
         }
         checkUpdateTextFields(xmlHarmonyConfiguration, xmlHarmonyConfiguration.getXmlRecord());
     }
 
-    void submitButtonPressed() {
+    boolean submitButtonPressed() {
         LOG.log(Level.INFO,"Submit buton clicked");
          if (!xmlHarmonyConfiguration.updateXmlFile()){
              LOG.log(Level.WARNING,"Update of XML failed");
-         };
+             return false;
+         }
+         boolean b= xmlHarmonyConfiguration.checkXmlRecordsOnViability();
+         if (!b){
+             return false;
+         }
+        MyCallable myCallable=new MyCallable(xmlHarmonyConfiguration);
+        try {
+            myCallable.call();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
 }

@@ -22,9 +22,9 @@ public class XmlValueRecord {
 
     private String xmlDirUrl;
     private String xmlFilePath;
-    private String scoringProgramFilePath;
-    private String bwsFilePath;
-    private String pcbridgephoneFilePath;
+//    private String scoringProgramFilePath;
+//    private String bwsFilePath;
+//    private String pcbridgephoneFilePath;
     private String errorMessage;
     private String language;
     private final ArrayList<CheckResult> crList;
@@ -33,6 +33,9 @@ public class XmlValueRecord {
         crList = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             CheckResult cr = new CheckResult();
+            cr.setResult(false);
+            cr.setErrorMessage("not initialized");
+            cr.setFile(new File("not initialized"));
             crList.add(cr);
         }
     }
@@ -65,32 +68,33 @@ public class XmlValueRecord {
         this.xmlFilePath = xmlFilePath;
     }
 
-    /**
-     * @return the scoringProgramFilePath
-     */
-    public String getScoringProgramFilePath() {
-        return scoringProgramFilePath;
-    }
-
-    /**
-     * @param scoringProgramFilePath the scoringProgramFilePath to set
-     */
-    public void setScoringProgramFilePath(String scoringProgramFilePath) {
-        this.scoringProgramFilePath = scoringProgramFilePath;
-    }
+//    /**
+//     * @return the scoringProgramFilePath
+//     */
+//    public String getScoringProgramFilePath() {
+//        return scoringProgramFilePath;
+//    }
+//
+//    /**
+//     * @param scoringProgramFilePath the scoringProgramFilePath to set
+//     */
+//    public void setScoringProgramFilePath(String scoringProgramFilePath) {
+//        this.scoringProgramFilePath = scoringProgramFilePath;
+//    }
 
     /**
      * @return the bwsFilePath
      */
     public String getBwsFilePath() {
-        return bwsFilePath;
+        return crList.get(BWSDIR).getFile().getAbsolutePath();
     }
 
     /**
      * @param bwsFilePath the bwsFilePath to set
      */
     public void setBwsFilePath(String bwsFilePath) {
-        this.bwsFilePath = bwsFilePath;
+        crList.get(BWSDIR).setFile(new File(bwsFilePath));
+//        this.bwsFilePath = bwsFilePath;
     }
 
     /**
@@ -101,51 +105,58 @@ public class XmlValueRecord {
      * @param f
      * @throws BridgePhoneException
      */
-    public void updateXmlRecordFilePath(int index, File f) throws BridgePhoneException {
-        switch (index) {
-            case SCORINGPROGRAM: {
-                setScoringProgramFilePath(f.getAbsolutePath());
-                break;
-            }
-            case PCBRIDGEPHONEPROGRAM: {
-                setPcbridgephoneFilePath(f.getAbsolutePath());
-                break;
-            }
-            case BWSDIR: {
-                setBwsFilePath(f.getAbsolutePath());
-                break;
-            }
-            default: {
-                throw new BridgePhoneException(TAG, "WTF unknown index ");
-            }
+    public void updateXmlRecordFilePath(int index, File f)  {
+        crList.get(index).setFile(f);
+//        switch (index) {
+//            case SCORINGPROGRAM: {
+//                crList.get(SCORINGPROGRAM).setFile(f);
+////                setScoringProgramFilePath(f.getAbsolutePath());
+//                break;
+//            }
+//            case PCBRIDGEPHONEPROGRAM: {
+//                setPcbridgephoneFilePath(f.getAbsolutePath());
+//                break;
+//            }
+//            case BWSDIR: {
+//                setBwsFilePath(f.getAbsolutePath());
+//                break;
+//            }
+//            default: {
+//                throw new BridgePhoneException(TAG, "WTF unknown index ");
+//            }
         }
-    }
 
 //    /**
 //     * @return the bridgemateFilePath
 //     */
 //    public String getBridgemateFilePath() {
-//        return bridgemateFilePath;
+//        return crList.get(BWSDIR).getFile().getAbsolutePath();
+////        return bridgemateFilePath;
 //    }
-//
+
 //    /**
 //     * @param bridgemateFilePath the bridgemateFilePath to set
 //     */
 //    public void setBridgemateFilePath(String bridgemateFilePath) {
-//        this.bridgemateFilePath = bridgemateFilePath;
+//        crList.get(BWSDIR).setFile(new File(bridgemateFilePath));
+////        this.bridgemateFilePath = bridgemateFilePath;
 //    }
     /**
+     *
      * @return the pcbridgephoneFilePath
      */
     public String getPcbridgephoneFilePath() {
-        return pcbridgephoneFilePath;
+        return crList.get(PCBRIDGEPHONEPROGRAM).getFile().getAbsolutePath();
+//        return pcbridgephoneFilePath;
     }
 
     /**
+     *
      * @param pcbridgephoneFilePath the pcbridgephoneFilePath to set
      */
     public void setPcbridgephoneFilePath(String pcbridgephoneFilePath) {
-        this.pcbridgephoneFilePath = pcbridgephoneFilePath;
+        crList.get(PCBRIDGEPHONEPROGRAM).setFile(new File(pcbridgephoneFilePath));
+//        this.pcbridgephoneFilePath = pcbridgephoneFilePath;
     }
 
     /**

@@ -52,9 +52,9 @@ public class MainViewFx {
     private final String NL = "Nederlands";
     private final String SLK = "Slovak";
 
-    private final boolean[] status = {TFNOK, TFNOK, TFNOK};
-    private static final boolean TFOK = true;
-    private static final boolean TFNOK = false;
+//    private final boolean[] status = {TFNOK, TFNOK, TFNOK};
+//    private static final boolean TFOK = true;
+//    private static final boolean TFNOK = false;
 
     private GridPane gridPaneMain;
 //    private int language;
@@ -180,11 +180,11 @@ public class MainViewFx {
         labelText[2] = resourceBundle.getString("main.bwsdirectory");
 
         int SCORINGPROGRAM = 0;
-        prepareInputFields(SCORINGPROGRAM, label, labelText, textField, locateButton, status);
+        prepareInputFields(SCORINGPROGRAM, label, labelText, textField, locateButton);
         int BRIDGEPHONEPROGRAM = 1;
-        prepareInputFields(BRIDGEPHONEPROGRAM, label, labelText, textField, locateButton, status);
+        prepareInputFields(BRIDGEPHONEPROGRAM, label, labelText, textField, locateButton);
         int BWSDIRECTORY = 2;
-        prepareInputFields(BWSDIRECTORY, label, labelText, textField, locateButton, status);
+        prepareInputFields(BWSDIRECTORY, label, labelText, textField, locateButton);
 
         // Add Submit Button
         submitButton = new Button(resourceBundle.getString("main.start"));
@@ -199,7 +199,7 @@ public class MainViewFx {
     }
 
     private void prepareInputFields(int fieldNo, Label[] label, String[] labelText,
-        TextField[] textField1, Button[] locateButton, boolean[] status) {
+                                    TextField[] textField1, Button[] locateButton) {
 
         // Add Name Label
         label[fieldNo] = new Label(labelText[fieldNo] + " : ");
@@ -220,7 +220,7 @@ public class MainViewFx {
 //        GridPane.setMargin(submitButton, new Insets(20, 0,20,0));
         EventHandlerLocateButton<ActionEvent> locateButtonHandler = new EventHandlerLocateButton<>();
         locateButton[fieldNo].setOnAction(locateButtonHandler);
-        locateButtonHandler.transferParm(fieldNo, textField1, status);
+        locateButtonHandler.transferParm(fieldNo, textField1);
     }
 
 //    @SuppressWarnings("Convert2Lambda")
@@ -277,11 +277,12 @@ public class MainViewFx {
         public void handle(ActionEvent e) {
             Object object = e.getSource();
             LOG.info("Submit button " + object.toString());
-            boolean b=status[0] & status[1] & status[2];
+//            boolean b=status[0] & status[1] & status[2];
+
+
+             boolean b=   control.submitButtonPressed();
             enableDisableStart(b);
-            if (b){
-                control.submitButtonPressed();
-            }
+
         }
     };
 
@@ -366,19 +367,19 @@ public class MainViewFx {
                         try {
                             textField1[fieldNo].setText(f.getCanonicalPath());
                             textField1[fieldNo].setStyle("-fx-text-inner-color: blue;");
-                            status[fieldNo] = TFOK;
+//                            status[fieldNo] = TFOK;
                             LOG.info("Textfield  "+labelText[fieldNo]+" set to "+f.getCanonicalPath());
 
                         } catch (IOException e) {
                             textField1[fieldNo].setText("Exception" + e.getMessage());
                             textField1[fieldNo].setStyle("-fx-text-inner-color: red;");
-                            status[fieldNo] = TFNOK;
+//                            status[fieldNo] = TFNOK;
                             LOG.log(Level.INFO,"Exception at  "+labelText[fieldNo]+"  "+e.getMessage());
                         }
                     } else {
                         textField1[fieldNo].setText("File should be an .exe file");
                         textField1[fieldNo].setStyle("-fx-text-inner-color: red;");
-                        status[fieldNo] = TFNOK;
+//                        status[fieldNo] = TFNOK;
                         LOG.info(labelText[fieldNo]+ " wrong extension");
                     }
                 }else{
@@ -388,10 +389,10 @@ public class MainViewFx {
             }
         }
 
-        public void transferParm(int fieldNo, TextField[] textField, boolean[] status) {
+        public void transferParm(int fieldNo, TextField[] textField) {
             this.fieldNo = fieldNo;
             textField1 = textField;
-            this.status = status;
+
         }
 
     }

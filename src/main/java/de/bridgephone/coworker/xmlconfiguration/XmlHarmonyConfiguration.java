@@ -9,14 +9,11 @@ package de.bridgephone.coworker.xmlconfiguration;
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.Locale;
-//import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.bridgephone.coworker.bppcexceptions.BridgePhoneException;
-//import org.apache.logging.log4j.LogManager;
-//import org.apache.logging.log4j.Logger;
 
 
 
@@ -115,7 +112,8 @@ public class XmlHarmonyConfiguration {
                 LOG.log(Level.SEVERE,TAG+s);
 //                LOG.fatal(TAG+s);
             }
-            xmlRecord.setScoringProgramFilePath(scoreProgrammFilePath);
+            setScoringProgramPathFile(new File(scoreProgrammFilePath));
+//            xmlRecord.setScoringProgramFilePath(scoreProgrammFilePath);
 
 //        Read bws file path
             String bwsFilePath = xmlDocHandling.readFilePath(BWS_PATH_TAG);
@@ -133,7 +131,7 @@ public class XmlHarmonyConfiguration {
                 String s = bundle.getString("bridgePhone_fil_path_is_not_set");
                 xmlRecord.setErrorMessage(s);
                 LOG.log(Level.WARNING,TAG+s);
-//                LOG.error(TAG+s);
+
             }
             xmlRecord.setPcbridgephoneFilePath(bridgePhoneFilePath);
 
@@ -142,7 +140,7 @@ public class XmlHarmonyConfiguration {
             String s = "Exception";
             xmlRecord.setErrorMessage(s);
             LOG.log(Level.SEVERE,TAG+s+t.getMessage());
-//            LOG.error(TAG+s, t);
+
         }
     }
 
@@ -156,7 +154,7 @@ public class XmlHarmonyConfiguration {
 
         XmlDocHandling xmlDocHandling = new XmlDocHandling(xmlRecord.getXmlFilePath());
         try {
-            xmlDocHandling.changeElement(xmlRecord.getScoringProgramFilePath(), XmlHarmonyConfiguration.SCORE_PROGRAMM_PATH_TAG);
+            xmlDocHandling.changeElement(getScoringProgramPathFile() , XmlHarmonyConfiguration.SCORE_PROGRAMM_PATH_TAG);
 
         xmlDocHandling.changeElement(xmlRecord.getPcbridgephoneFilePath(), XmlHarmonyConfiguration.BRIDGEPHONE_PATH_TAG);
         xmlDocHandling.changeElement(xmlRecord.getBwsFilePath(), XmlHarmonyConfiguration.BWS_PATH_TAG);
@@ -201,7 +199,7 @@ public class XmlHarmonyConfiguration {
                         break;
                     }
                     case XmlValueRecord.SCORINGPROGRAM: {
-                        filePath = xmlRecord.getScoringProgramFilePath();
+                        filePath = getScoringProgramPathFile() ;
                         b1 = checkOnExistance(filePath, XmlValueRecord.SCORINGPROGRAM);
                         b2 = checkOnExecutability(filePath);
                         break;
@@ -335,12 +333,14 @@ public class XmlHarmonyConfiguration {
 //    }
 
     public String getScoringProgramPathFile() {
-        return xmlRecord.getScoringProgramFilePath();
+        return xmlRecord.getCr().get(XmlValueRecord.SCORINGPROGRAM).getFile().getAbsolutePath();
+//        return xmlRecord.getScoringProgramFilePath();
     }
 
-//    public void setScoringProgramPathFile(File f) {
+    public void setScoringProgramPathFile(File f) {
+        xmlRecord.getCr().get(XmlValueRecord.SCORINGPROGRAM).setFile(f);
 //        xmlRecord.setScoringProgramFilePath(f.getAbsolutePath());
-//    }
+    }
 
 //    public String getPcbridgephoneFilePath() {
 //        return xmlRecord.getPcbridgephoneFilePath();
@@ -367,7 +367,8 @@ public class XmlHarmonyConfiguration {
     public String determineFilePath(int i) {
         switch (i) {
             case XmlValueRecord.SCORINGPROGRAM:
-                return xmlRecord.getScoringProgramFilePath();
+                return getScoringProgramPathFile() ;
+//                return xmlRecord.getScoringProgramFilePath();
             case XmlValueRecord.BWSDIR:
                 return xmlRecord.getBwsFilePath();
             case XmlValueRecord.PCBRIDGEPHONEPROGRAM:
@@ -379,15 +380,15 @@ public class XmlHarmonyConfiguration {
     }
 
     /**
-     * *
-     *
+     *  Check the existence of te file
+     * Update the xml record
      * @param filePath to exe or bws file
      * @param textFieldId 0..2 scorecalcuation program, bridgephone.exe , bws directory
      * @return true if exists
      */
     public boolean checkOnExistance(String filePath, int textFieldId) {
-        CheckResult cr = new CheckResult();
-        cr.setResult(CheckResult.NOK);
+        CheckResult cr = xmlRecord.getCr().get(textFieldId);
+//        cr.setResult(CheckResult.NOK);
         try {
             if (filePath == null) {
                 String s = MessageFormat.format(bundle.getString("file_not_defined"), filePath);
@@ -428,12 +429,21 @@ public class XmlHarmonyConfiguration {
     }
 
     /**
-     * *
+     * Check whether file is executable
+     * Presume file exists
      *
      * @param filePath to the file to be checked on executability
      * @return true if executable
      */
     public boolean checkOnExecutability(String filePath) {
+        File f=new File(filePath);
+        if (!f.exists()){
+            //programming error checkOnExecutability should be called after  checkOnExistance
+            String s="WTF file "+filePath+" should exists";
+            LOG.log(Level.SEVERE,TAG +" " + s);
+            return false;
+        }
+
         if (!filePath.trim().toLowerCase().endsWith(".exe")) {
             String s = MessageFormat.format(bundle.getString("file_0_is_not_executable"), filePath);
             xmlRecord.setErrorMessage(s);

@@ -1,9 +1,9 @@
 
 package de.bridgephone.coworker;
 
-/**
- *
- * @author Kees
+/*
+  Calling of scoring program and waiting for BWS to emerge
+  @author Kees
  */
 
 import java.io.File;
@@ -30,11 +30,11 @@ public class MyCallable implements Callable<String> {
 
     public MyCallable(XmlHarmonyConfiguration xmlConfiguration) {
         this.xmlConfiguration = xmlConfiguration;
-        bundle = ResourceBundle.getBundle("de/bridgephone/bridgephoneharmony/resources/BridgePhoneHarmonyConfigurator");
+        bundle = ResourceBundle.getBundle("BridgePhoneHarmonyConfigurator");
     }
 
     @Override
-    public String call() throws Exception {
+    public String call()  {
         startScoreProgram(xmlConfiguration);
         return "Klaar";
     }
