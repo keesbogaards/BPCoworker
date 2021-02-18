@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<Configuration>
+  <Appenders>
+    <Console name="stdout">
+      <MarkerFilter onMatch="ACCEPT" onMismatch="DENY" marker="FLOW"/>
+      <PatternLayout pattern="%d [%t] %-5level: %msg%n%throwable"/>
+    </Console>
+    <File name="log" fileName="target/coworker.log">
+      <PatternLayout pattern="%d [%t] %-5level: %msg%n%throwable"/>
+    </File>
+  </Appenders>
+  <Loggers>
+    <Root level="TRACE">
+      <AppenderRef ref="stdout"/>
+      <AppenderRef ref="log"/>
+    </Root>
+    <Logger name="de" level="DEBUG" additivity="true">
+      <AppenderRef ref="log"/>
+    </Logger>
+  </Loggers>
+</Configuration>
