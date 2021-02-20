@@ -46,12 +46,9 @@ public class App extends Application {
     String workDirUrl=    xmlConfiguration.defineWorkdir();
     BPLoggerOldStyle logger= BPLoggerOldStyle.getInstance();
     logger.init(workDirUrl, Level.CONFIG);
-//    BPLoggerLog4J BPLoggerLog4J = new BPLoggerLog4J(workDirUrl);
-//    BPLoggerLog4J.runTimeConfigurationBuilderBaeldung();
-//    Logger LOG = LogManager.getLogger(TAG);
     if (!xmlConfiguration.initialize(workDirUrl)){
         //TODO send user a message
-    };
+    }
     LOG.info("Coworker start logging");
     FXMLLoader loader=new FXMLLoader(getClass().getResource("/primary.fxml"));
     Parent root=loader.load();
@@ -59,12 +56,12 @@ public class App extends Application {
     stage.setScene(scene);
 
 
-    String s = xmlConfiguration.getStatus();
-    if (!s.isEmpty()) {
-//               JOptionPane.showMessageDialog(, s);
-        return;
-    }
-    xmlConfiguration.readAllXmlValues();
+//    String s = xmlConfiguration.getStatus();
+//    if (!s.isEmpty()) {
+////               JOptionPane.showMessageDialog(, s);
+//        return;
+//    }
+    xmlConfiguration.checkOutXmlRecord();
     MainViewControl mainControl= new MainViewControl();
     MainViewFx mainViewFx= new MainViewFx();
     mainViewFx.setMainControl(mainControl);

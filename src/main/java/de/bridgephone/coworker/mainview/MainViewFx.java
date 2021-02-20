@@ -1,6 +1,7 @@
 
 package de.bridgephone.coworker.mainview;
 
+import de.bridgephone.coworker.xmlconfiguration.CheckResult;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -277,9 +278,6 @@ public class MainViewFx {
         public void handle(ActionEvent e) {
             Object object = e.getSource();
             LOG.info("Submit button " + object.toString());
-//            boolean b=status[0] & status[1] & status[2];
-
-
              boolean b=   control.submitButtonPressed();
             enableDisableStart(b);
 
@@ -359,33 +357,26 @@ public class MainViewFx {
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Search for " + labelText[fieldNo]);
                 File f = fileChooser.showOpenDialog(stage);
-                LOG.info("File chooser invoked for "+ labelText[fieldNo]);
-                control.check(f, fieldNo);
-                if (f.exists()) {
-
-                    if (f.getName().endsWith(extensionText[fieldNo])) {
+                LOG.info("File chooser invoked for " + labelText[fieldNo]);
+                if (f != null) {
+                    CheckResult cr = control.newFileNameEntered(f, fieldNo);
+                    if (cr.isResult()) {
                         try {
-                            textField1[fieldNo].setText(f.getCanonicalPath());
+                            textField1[fieldNo].setText(cr.getFile().getCanonicalPath());
                             textField1[fieldNo].setStyle("-fx-text-inner-color: blue;");
-//                            status[fieldNo] = TFOK;
-                            LOG.info("Textfield  "+labelText[fieldNo]+" set to "+f.getCanonicalPath());
+                            LOG.info("Textfield  " + labelText[fieldNo] + " set to " + f.getCanonicalPath());
 
                         } catch (IOException e) {
                             textField1[fieldNo].setText("Exception" + e.getMessage());
                             textField1[fieldNo].setStyle("-fx-text-inner-color: red;");
-//                            status[fieldNo] = TFNOK;
-                            LOG.log(Level.INFO,"Exception at  "+labelText[fieldNo]+"  "+e.getMessage());
+                            LOG.log(Level.INFO, "Exception at  " + labelText[fieldNo] + "  " + e.getMessage());
                         }
                     } else {
-                        textField1[fieldNo].setText("File should be an .exe file");
+                        textField1[fieldNo].setText(cr.getErrorMessage());
                         textField1[fieldNo].setStyle("-fx-text-inner-color: red;");
-//                        status[fieldNo] = TFNOK;
-                        LOG.info(labelText[fieldNo]+ " wrong extension");
+                        LOG.info(labelText[fieldNo] + cr.getErrorMessage());
                     }
-                }else{
-                    LOG.log(Level.INFO,"filechooser file does not exist");
                 }
-
             }
         }
 

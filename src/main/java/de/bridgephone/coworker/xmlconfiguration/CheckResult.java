@@ -19,7 +19,7 @@ import java.io.File;
 public class CheckResult {
     
     public final static boolean OK=true;
-        public final static boolean NOK=false;
+    public final static boolean NOK=false;
 
     private boolean result = true;
     private File fileName = null;
@@ -27,9 +27,23 @@ public class CheckResult {
     private String errorMessage = "";
 //    private final ResourceBundle bundle;
 
-//    public CheckResult() {
-////        bundle = java.util.ResourceBundle.getBundle("de/bridgephone/bridgephoneharmony/resources/BridgePhoneHarmonyConfigurator");
-//    }
+    public CheckResult() {
+
+    }
+
+    public CheckResult(File f, boolean b,String message){
+        fileName=f;
+        result=b;
+        errorMessage=message;
+    }
+
+    public CheckResult(File f){
+        fileName=f;
+        result=OK;
+        errorMessage="";
+
+    }
+
 
     /**
      * @return the ok

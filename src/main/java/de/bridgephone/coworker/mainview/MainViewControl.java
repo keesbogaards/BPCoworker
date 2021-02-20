@@ -52,56 +52,16 @@ public class MainViewControl {
         this.xmlHarmonyConfiguration = xmlHarmonyConfiguration;
         XmlValueRecord xmlRecord = xmlHarmonyConfiguration.getXmlRecord();
         currentLocale = xmlHarmonyConfiguration.getCurrentLocale();
-
         checkUpdateTextFields(xmlHarmonyConfiguration, xmlRecord);
 
     }
 
     private void checkUpdateTextFields(XmlHarmonyConfiguration xmlHarmonyConfiguration1, XmlValueRecord xmlRecord) {
-        if (xmlHarmonyConfiguration1.checkXmlRecordsOnViability()) {
+       xmlHarmonyConfiguration1.checkXmlRecordsOnViability() ;
             ArrayList<CheckResult> crList = xmlRecord.getCr();
-            // Scoring program
-            int i = XmlValueRecord.SCORINGPROGRAM;
-            String s;
-            CheckResult cr = crList.get(XmlValueRecord.SCORINGPROGRAM);
-            if (cr.isResult()) {
-                File scoringProgram = cr.getFile();
-                if (scoringProgram == null) {
-                    s = "null";
-                } else {
-                    s = cr.getFile().getAbsolutePath();
-                }
-            } else {
-                s = cr.getErrorMessage();
-            }
-            view.setTextField(i, s, cr.isResult());
-            i = XmlValueRecord.PCBRIDGEPHONEPROGRAM;
-            cr = crList.get(i);
-            if (cr.isResult()) {
-                File pcBridgePhone = cr.getFile();
-                if (pcBridgePhone == null) {
-                    s = "null";
-                } else {
-                    s = cr.getFile().getAbsolutePath();
-                }
-            } else {
-                s = cr.getErrorMessage();
-            }
-            view.setTextField(i, s, cr.isResult());
-            i = XmlValueRecord.BWSDIR;
-            cr = crList.get(i);
-            if (cr.isResult()) {
-                File pcBridgePhone = cr.getFile();
-                if (pcBridgePhone == null) {
-                    s = "null";
-                } else {
-                    s = cr.getFile().getAbsolutePath();
-                }
-            } else {
-                s = cr.getErrorMessage();
-            }
-            view.setTextField(i, s, cr.isResult());
-
+            setTextFieldText(crList,XmlValueRecord.SCORINGPROGRAM);
+            setTextFieldText(crList,XmlValueRecord.PCBRIDGEPHONEPROGRAM);
+            setTextFieldText(crList,XmlValueRecord.BWSDIR);
 
             view.enableDisableStart(false);
             if (crList.get(XmlValueRecord.BWSDIR).isResult()) {
@@ -112,6 +72,28 @@ public class MainViewControl {
                 }
             }
         }
+
+
+    /***
+     * Set the TextField text based onthe value of the cr
+     * @param crList
+     * @param i
+     */
+    private void setTextFieldText(ArrayList<CheckResult> crList, int i ) {
+        CheckResult cr;
+        String s;
+        cr = crList.get(i);
+        if (cr.isResult()) {
+            File pcBridgePhone = cr.getFile();
+            if (pcBridgePhone == null) {
+                s = "null";
+            } else {
+                s = cr.getFile().getAbsolutePath();
+            }
+        } else {
+            s = cr.getErrorMessage();
+        }
+        view.setTextField(i, s, cr.isResult());
     }
 
 
@@ -120,19 +102,20 @@ public class MainViewControl {
         xmlHarmonyConfiguration.setLocale(currentLocale, i);
     }
 
-    void check(File f, int fieldNo) {
-        String path = f.getAbsolutePath();
-        if (fieldNo == XmlValueRecord.BWSDIR) {
-            xmlHarmonyConfiguration.getXmlRecord().setBwsFilePath(path);
-        }
-        if (fieldNo == XmlValueRecord.PCBRIDGEPHONEPROGRAM) {
-            xmlHarmonyConfiguration.getXmlRecord().setPcbridgephoneFilePath(path);
-        }
-        if (fieldNo == XmlValueRecord.PCBRIDGEPHONEPROGRAM) {
-            xmlHarmonyConfiguration.setScoringProgramPathFile(new File(path));
-//            xmlHarmonyConfiguration.getXmlRecord().setScoringProgramFilePath(path);
-        }
+
+    /**
+     * Check the file value  f
+     * check all fields
+     * r
+     * @param f the File
+     * @param fieldNo
+     * @return
+     */
+    CheckResult newFileNameEntered(File f, int fieldNo) {
+        xmlHarmonyConfiguration.updateXmlRecord(f,fieldNo);
+        xmlHarmonyConfiguration.updateXmlFile();
         checkUpdateTextFields(xmlHarmonyConfiguration, xmlHarmonyConfiguration.getXmlRecord());
+        return xmlHarmonyConfiguration.getXmlRecord().getCr().get(fieldNo);
     }
 
     boolean submitButtonPressed() {
