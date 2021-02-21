@@ -83,26 +83,20 @@ public class XmlHarmonyConfiguration {
 
     /**  TODO check completely
      * *
-     * Read all the values from the xml file Test on feasibility. If not feasile
+     * Read all the values from the xml file Test on existence. If null
      * , set error messages and return
      * @return empty message if ok, else all problems specified
      */
     public String checkOutXmlRecord() {
-//        Read scoring program file path
+
         StringBuilder sb= new StringBuilder("");
         try {
             xmlFileHandling.readPathsFromXmlFile(xmlRecord);
-//            XmlDocHandling xmlDocHandling = new XmlDocHandling(xmlRecord.getXmlFilePath());
-
-
-            // read language
-//            String language = xmlDocHandling.readFilePath(LANGUAGE_TAG);
             String language =xmlRecord.getLanguage();
             xmlRecord.setLanguage(language);
             currentLocale=readLocale();
             bundle = ResourceBundle.getBundle("BridgePhoneHarmonyConfigurator", currentLocale);
 
-//            String scoreProgrammFilePath = xmlDocHandling.readFilePath(SCORE_PROGRAMM_PATH_TAG);
             String scoreProgrammFilePath =xmlRecord.getCr().get(XmlValueRecord.SCORINGPROGRAM).getFile().getAbsolutePath();
             if (scoreProgrammFilePath.isEmpty()) {
                 String s = bundle.getString("score_program_path_is_not_set");
@@ -110,15 +104,13 @@ public class XmlHarmonyConfiguration {
                 LOG.log(Level.SEVERE,TAG+s);
                 sb.append(s);
             }
-            setScoringProgramPathFile(new File(scoreProgrammFilePath));
 //        Read bws file path
             String bwsFilePath =xmlRecord.getCr().get(XmlValueRecord.BWSDIR).getFile().getAbsolutePath();
-            if (scoreProgrammFilePath.isEmpty()) {
+            if (bwsFilePath.isEmpty()) {
                 String s = TAG+ bundle.getString("bws_file_path_is_not_set");
                 LOG.log(Level.SEVERE,TAG+s);
                 sb.append(" "+s);
             }
-//            xmlRecord.setBwsFilePath(bwsFilePath);
 
 //      Read BridgePhone Path
             String bridgePhoneFilePath =xmlRecord.getCr().get(XmlValueRecord.PCBRIDGEPHONEPROGRAM).getFile().getAbsolutePath();
@@ -128,7 +120,6 @@ public class XmlHarmonyConfiguration {
                 sb.append(" "+s);
 
             }
-//            xmlRecord.setPcbridgephoneFilePath(bridgePhoneFilePath);
             return sb.toString();
 
         } catch (Throwable t) {
@@ -473,10 +464,11 @@ public class XmlHarmonyConfiguration {
             xmlRecord.setCr(textFiledId,crNew);
             LOG.log(Level.WARNING,TAG +" " + s);
 //            LOG.fatal(s);
-//            return false;
+            return;
+        }else {
+            CheckResult crNew = new CheckResult(f);
+            xmlRecord.setCr(textFiledId, crNew);
         }
-        CheckResult crNew=new CheckResult(f);
-        xmlRecord.setCr(textFiledId,crNew);
 //        return true;
     }
 

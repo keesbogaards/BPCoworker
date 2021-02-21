@@ -56,8 +56,8 @@ public class MainViewControl {
 
     }
 
-    private void checkUpdateTextFields(XmlHarmonyConfiguration xmlHarmonyConfiguration1, XmlValueRecord xmlRecord) {
-       xmlHarmonyConfiguration1.checkXmlRecordsOnViability() ;
+    private void checkUpdateTextFields(XmlHarmonyConfiguration xmlHarmonyConfiguration, XmlValueRecord xmlRecord) {
+       xmlHarmonyConfiguration.checkXmlRecordsOnViability() ;
             ArrayList<CheckResult> crList = xmlRecord.getCr();
             setTextFieldText(crList,XmlValueRecord.SCORINGPROGRAM);
             setTextFieldText(crList,XmlValueRecord.PCBRIDGEPHONEPROGRAM);
@@ -76,8 +76,8 @@ public class MainViewControl {
 
     /***
      * Set the TextField text based onthe value of the cr
-     * @param crList
-     * @param i
+     * @param crList checkresults for TextField
+     * @param i TextField  number
      */
     private void setTextFieldText(ArrayList<CheckResult> crList, int i ) {
         CheckResult cr;

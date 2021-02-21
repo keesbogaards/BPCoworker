@@ -163,7 +163,7 @@ public class XmlDocHandling {
      *
      * @param elementText the value of elementText
      * @param tag the value of tid
-     * @throws BridgePhoneException
+     * @throws BridgePhoneException  an error
      */
     public void changeElement(String elementText, String tag) throws BridgePhoneException {
         try {

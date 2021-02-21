@@ -121,7 +121,8 @@ public class MyCallable implements Callable<String> {
                         String s = bwsFilePath + timeString;
                         LOG.info(s);
 //**  temp
-                        String PCBridgePhonePath = xmlConfiguration.determineFilePath(XmlValueRecord.PCBRIDGEPHONEPROGRAM);
+                        String PCBridgePhonePath = xmlConfiguration.getXmlRecord().getCr().
+                                get(XmlValueRecord.SCORINGPROGRAM).getFile().getPath();
 //        pSp.command("C:\\Users\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe"); 
 //        https://docs.oracle.com/javase/6/docs/api/java/lang/ProcessBuilder.html
 //        https://stackoverflow.com/questions/5604698/java-programming-call-an-exe-from-java-and-passing-parameters
