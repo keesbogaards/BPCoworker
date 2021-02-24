@@ -138,7 +138,7 @@ public class XmlHarmonyConfiguration {
      *
      */
     public boolean updateXmlFile(/*XmlValueRecord xmlRecord*/) {
-        xmlFileHandling.readPathsFromXmlFile(xmlRecord);
+//        xmlFileHandling.readPathsFromXmlFile(xmlRecord);
         XmlDocHandling xmlDocHandling = new XmlDocHandling(xmlRecord.getXmlFilePath());
         try {
             xmlDocHandling.changeElement(getScoringProgramPathFile() , XmlHarmonyConfiguration.SCORE_PROGRAMM_PATH_TAG);

@@ -68,17 +68,16 @@ public class XmlFileHandling {
 
         String xmlFilePath = xmlDirUrl + "\\" + FILEXML;
         if (!new File(xmlFilePath).exists()) {
-            try {
-                if (!new File(xmlFilePath).createNewFile()) {
-                    String s = "Could not create a configuration file ";
-                    xmlRecord.setXmlFilePath(s);
+                int i=   copyFilesFromHomeToWorkDir(f.getAbsolutePath());
+                if (i == 3) {
+
+                    LOG.log(Level.INFO, "New workdirectory with content created");
+                }else {
+                    String s="Problem opening " + xmlDirUrl;
                     LOG.log(Level.SEVERE,s);
+                    xmlRecord.setXmlDirUrl(xmlDirUrl);
                     return false;
                 }
-            } catch (IOException ex) {
-                LOG.log(Level.SEVERE,ex.getMessage());
-                return false;
-            }
         } else {
             xmlRecord.setXmlFilePath(xmlFilePath);
             String s = java.text.MessageFormat.format(" Xml file path set to {0}", xmlFilePath);

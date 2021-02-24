@@ -20,8 +20,8 @@ public class XmlValueRecord {
     public static final int PCBRIDGEPHONEPROGRAM = 1;
     public static final int BWSDIR = 2;
 
-    private String xmlDirUrl;
-    private String xmlFilePath;
+    private String xmlDirUrl;// Directory where the xml file is to be found, is also working directory
+    private String xmlFilePath;// path to the xml file
     private String language;
     private final ArrayList<CheckResult> crList;
 
@@ -66,6 +66,7 @@ public class XmlValueRecord {
 
 
     /**
+     * convenience method to the bws file path
      * @return the bwsFilePath
      */
     public String getBwsFilePath() {
@@ -73,20 +74,20 @@ public class XmlValueRecord {
     }
 
     /**
+     * convenience method
      * @param bwsFilePath the bwsFilePath to set
      */
     public void setBwsFilePath(String bwsFilePath) {
+        updateXmlRecordFilePath(BWSDIR,new File(bwsFilePath));
         crList.get(BWSDIR).setFile(new File(bwsFilePath));
-//        this.bwsFilePath = bwsFilePath;
     }
 
     /**
-     * *
-     * Update xml value
      *
-     * @param index
-     * @param f
-     * @throws BridgePhoneException
+     * Update xml
+     *
+     * @param index SCORINGPROGRAM=0, PCBRIDGEPHONEPROGRAM=1,BWSDIR=2
+     * @param f File
      */
     public void updateXmlRecordFilePath(int index, File f)  {
 
@@ -110,7 +111,23 @@ public class XmlValueRecord {
      * @param pcbridgephoneFilePath the pcbridgephoneFilePath to set
      */
     public void setPcbridgephoneFilePath(String pcbridgephoneFilePath) {
-        crList.get(PCBRIDGEPHONEPROGRAM).setFile(new File(pcbridgephoneFilePath));
+        updateXmlRecordFilePath(PCBRIDGEPHONEPROGRAM,new File(pcbridgephoneFilePath));
+    }
+
+    /**
+     *
+     * @return the pcbridgephoneFilePath
+     */
+    public String getScoringProgramFilePath() {
+        return crList.get(SCORINGPROGRAM).getFile().getAbsolutePath();
+    }
+
+    /**
+     *
+     * @param scoringProgramFilePath the scoring program FilePath to set
+     */
+    public void setScoringProgramFilePath(String scoringProgramFilePath) {
+        updateXmlRecordFilePath(PCBRIDGEPHONEPROGRAM,new File(scoringProgramFilePath));
     }
 
 

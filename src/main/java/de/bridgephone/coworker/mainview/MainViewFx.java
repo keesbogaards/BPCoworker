@@ -28,6 +28,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static de.bridgephone.coworker.xmlconfiguration.XmlValueRecord.*;
+
 
 public class MainViewFx {
 
@@ -180,12 +182,12 @@ public class MainViewFx {
 //        labelText[1]=resourceBundle.getString("Main.configuration");
         labelText[2] = resourceBundle.getString("main.bwsdirectory");
 
-        int SCORINGPROGRAM = 0;
+
         prepareInputFields(SCORINGPROGRAM, label, labelText, textField, locateButton);
-        int BRIDGEPHONEPROGRAM = 1;
-        prepareInputFields(BRIDGEPHONEPROGRAM, label, labelText, textField, locateButton);
-        int BWSDIRECTORY = 2;
-        prepareInputFields(BWSDIRECTORY, label, labelText, textField, locateButton);
+
+        prepareInputFields(PCBRIDGEPHONEPROGRAM, label, labelText, textField, locateButton);
+
+        prepareInputFields(BWSDIR, label, labelText, textField, locateButton);
 
         // Add Submit Button
         submitButton = new Button(resourceBundle.getString("main.start"));
